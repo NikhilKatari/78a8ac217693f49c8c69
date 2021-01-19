@@ -1,8 +1,8 @@
 import { ServiceService } from './../service.service';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import { BsModalRef } from "ngx-bootstrap/modal";
+import { interval, Subscription} from 'rxjs';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -15,7 +15,13 @@ export class TableComponent implements OnInit {
   data: any;
   getID: any;
   modalRef: BsModalRef;
-  constructor(private modalService: BsModalService, private serviceService: ServiceService) { }
+  mySubscription:Subscription
+  constructor(private modalService: BsModalService, private serviceService: ServiceService,
+    ) {
+      this.mySubscription= interval(10000).subscribe((x =>{
+        this.getTable();
+    }));
+    }
 
   ngOnInit(): void {
     this.getTable();
@@ -33,10 +39,7 @@ export class TableComponent implements OnInit {
     this.modalRef = this.modalService.show(template, this.dataid);
     this.getID = this.getFullData.filter(ids => ids.objectID === dataId)
     console.log(this.getID);
-    // this.getFullData.filter((value,index)=>{
-    //   return value.dataId == this.getFullData.ObjectId;
-    //   console.log()
-    // });
 
   }
+
 }
